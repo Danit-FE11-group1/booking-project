@@ -1,9 +1,12 @@
 package ua.com.danit.console;
 
+import javax.swing.*;
 import javax.xml.crypto.Data;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -15,7 +18,6 @@ public class ConsoleMenu {
         while (!stopProgram) {
             printMenuItems();
             String input = scanner.nextLine();
-
             switch (input) {
                 case "1":
                     safeCall(ConsoleMenu::scoreboardOnline, scanner);
@@ -24,7 +26,22 @@ public class ConsoleMenu {
                     safeCall(ConsoleMenu::flightsInfo, scanner);
                     break;
                 case "3":
-                    safeCall(ConsoleMenu::flightsBooking, scanner);
+                    safeCall(ConsoleMenu::searchBooking, scanner);
+                    flightsList();
+                    boolean stopMenuFlights = false;
+                    while (!stopMenuFlights) {
+                        Scanner scanner2 = new Scanner(System.in);
+                        String input2 = scanner2.nextLine();
+                        switch (input2) {
+                            case "0":
+                                stopMenuFlights = true;
+                                break;
+                            default:
+//                              // добавить в flightsBooking колличество итераций с searchBooking
+                                safeCall(ConsoleMenu::flightsBooking, scanner2);
+                                stopMenuFlights = true;
+                        }
+                    }
                     break;
                 case "4":
                     safeCall(ConsoleMenu::cancelBooking, scanner);
@@ -45,6 +62,7 @@ public class ConsoleMenu {
 //        add code here Online Scoreboard connect to  DB
         System.out.println("ДОБАВИТЬ ВЫВОД Всех рейсов из Киева в ближайшие 24 часа");
     }
+
     private static void flightsInfo(Scanner scanner) {
         System.out.println("Посмотреть информацию о рейсе");
         System.out.println("Введите номер рейса");
@@ -52,26 +70,38 @@ public class ConsoleMenu {
 //        add code here Flight Information connect to  DB
         System.out.println("Номер рейса: " + customerId + " Дата: " + " Время: " + " Место назначения: " + " Количество свободных мест: " );
     }
-    private static void flightsBooking(Scanner scanner) {
+
+    private static void searchBooking(Scanner scanner) {
         System.out.println("Поиск и бронировка рейса");
         System.out.println("Место назначения");
         String flightPlace= readTyped(scanner, String::valueOf, "Не место, попробуйте еще раз");
         System.out.println("Введите дату (dd.mm.yyyy):");
-//      ?????? доработаь проверку даты и ее печать пока стоит как сринга
+//      ?????? доработаь проверку даты и ее печать пока стоит как стринга
         String flightDate = readTyped(scanner, String::valueOf, "Не дата, попробуйте еще раз");
         System.out.println("Количество человек");
         Integer flightPassengerQty = readTyped(scanner, Integer::parseInt, "Не число, попробуйте еще раз");
-//        add code here show all flights that response to all the requirements connect to DB and create # for each item list to choose in console next step
-        System.out.println("Список подходящих рейсов: для " + flightPlace +" - "+ flightDate +" - "+ flightPassengerQty );
-        System.out.println("Выберите № рейса и введите его порядковый номер");
-//      Not developed -  Все найденные рейсы должны быть выведены на экран. После этого пользователь может выбрать один из найденных рейсов, указав его порядковый номер, либо вернуться в ГЛАВНОЕ меню (выбрав пункт 0).
-//      DONE - if Booking(Обернуть в цыкл для такого колличеста людей как были выбранны в 1 пунке "Количество человек")
-        System.out.println("Ведите имя");
-        String passengerName= readTyped(scanner, String::valueOf, "Не имя, попробуйте еще раз");
-        System.out.println("Ведите фамилию");
-        String passengerSurname= readTyped(scanner, String::valueOf, "Не фамилия, попробуйте еще раз");
-        System.out.println("Вы забронировали рейс" + "# рейса для " + passengerName + "- " + passengerSurname + "# бронирования");
+        System.out.println("Список подходящих рейсов: в город " + flightPlace +" - на "+ flightDate +" - для "+ flightPassengerQty + " человек");
     }
+    private static void flightsList() {
+        //      заменить flights на ответ с DB
+        System.out.println("0. Выход");
+        List<String> flights = Arrays.asList("2343", "3453", "3453", "4534");
+        int index = 1;
+        for (String s : flights) {
+            System.out.println((index++) + ". " + s);
+        }
+    }
+    private static void flightsBooking(Scanner scanner) {
+        // change 2 на flightPassengerQty from searchBooking
+        for(int i = 0; i < 2; i++) {
+            System.out.println("Ведите имя");
+            String passengerName= readTyped(scanner, String::valueOf, "Не имя, попробуйте еще раз");
+            System.out.println("Ведите фамилию");
+            String passengerSurname= readTyped(scanner, String::valueOf, "Не фамилия, попробуйте еще раз");
+            //Есть возможность добавить № бронирования ???
+            System.out.println("Вы забронировали рейс"+ "- для " + passengerName + "- " + passengerSurname + "# бронирования");
+        }
+     }
     private static void cancelBooking(Scanner scanner) {
         System.out.println("Отменить бронирование");
         System.out.println("Введите номер бронирования");
