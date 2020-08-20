@@ -1,4 +1,4 @@
-package ua.com.danit.booking.entites;
+package ua.com.danit.dao.booking.entites;
 
 import java.io.Serializable;
 

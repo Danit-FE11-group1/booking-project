@@ -1,4 +1,4 @@
-package ua.com.danit.booking.dao;
+package ua.com.danit.dao.booking.dao;
 
 import java.util.List;
 
