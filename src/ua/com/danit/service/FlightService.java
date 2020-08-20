@@ -47,6 +47,11 @@ public class FlightService {
                 .collect(Collectors.toList());
     }
 
+    public boolean bookingFlight(long id) {
+
+        return true;
+    }
+
     public Flight getFlightById(long id) {
         return this.collectionFlightDao.getFlightById(id);
     }
@@ -61,8 +66,16 @@ public class FlightService {
 
     private Flight createFlight() {
         Random random = new Random();
-        int cityIndex = random.nextInt(City.values().length);
-        City city = City.values()[cityIndex];
+
+        int depCityIndex = random.nextInt(City.values().length);
+        int destCityIndex = depCityIndex;
+
+        while (depCityIndex == destCityIndex) {
+            destCityIndex = random.nextInt(City.values().length);
+        }
+
+        City depCity = City.values()[depCityIndex];
+        City destCity = City.values()[destCityIndex];
 
         long hourInMillis = 1000 * 60 * 60;
 
@@ -81,7 +94,7 @@ public class FlightService {
 
         double cost = 100.00 + random.nextInt(100);
 
-        return new Flight(city, date, boat, cost);
+        return new Flight(depCity, destCity, date, boat, cost);
     }
 
     public void loadFlights() throws IOException {

@@ -13,19 +13,21 @@ public class Flight implements Serializable {
     private final long id;
     private String name;
     private long date;
-    private String destination;
+    private final String destination;
+    private final String departure;
     Boat boat;
     private int freeSeats;
     private double cost;
 
-    public Flight(City city, long date, Boat boat, double cost) {
-        String ident = ((city.ordinal() + 1000) + "").substring(1);
-        this.name = city.getCountry() + "-" + ident;
+    public Flight(City dep, City dest, long date, Boat boat, double cost) {
+        String ident = ((dest.ordinal() + 1000) + "").substring(1);
+        this.name = dep.getCountry() + "-" + ident;
 
-        this.id = date + city.ordinal();
+        this.id = date + 100 * dep.ordinal() + dest.ordinal();
 
         this.date = date;
-        this.destination = city.getCityName();
+        this.destination = dest.getCityName();
+        this.departure = dep.getCityName();
         this.boat = boat;
         this.cost = cost;
 
@@ -61,8 +63,8 @@ public class Flight implements Serializable {
         return destination;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public String getDeparture() {
+        return departure;
     }
 
     public Boat getBoat() {
@@ -95,18 +97,22 @@ public class Flight implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Flight flight = (Flight) o;
         return date == flight.date &&
+                Double.compare(flight.cost, cost) == 0 &&
                 Objects.equals(name, flight.name) &&
-                Objects.equals(destination, flight.destination);
+                Objects.equals(destination, flight.destination) &&
+                Objects.equals(departure, flight.departure);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, date, destination, freeSeats, cost);
+        return Objects.hash(name, date, destination, departure, cost);
     }
 
     @Override
     public String toString() {
-        return "Flight to "
+        return "Flight from "
+                + this.departure
+                + " to "
                 + this.destination
                 + ", "
                 + this.showDate()

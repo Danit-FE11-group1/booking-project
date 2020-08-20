@@ -13,6 +13,6 @@ public class Main {
         FlightService flightService = new FlightService(collectionFlightDao);
         flightService.loadFlights();
         List<Flight> flights = flightService.getAllFlights();
-        flights.forEach(f -> System.out.println(f.showDate()));
+        flights.forEach(System.out::println);
     }
 }
