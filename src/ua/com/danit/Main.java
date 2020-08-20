@@ -11,10 +11,5 @@ import ua.com.danit.console.ConsoleMenu;
 public class Main {
     public static void main(String[] args)throws IOException  {
         ConsoleMenu.start();
-        CollectionFlightDao collectionFlightDao = new CollectionFlightDao();
-        FlightService flightService = new FlightService(collectionFlightDao);
-        flightService.uploadFlights();
-        List<Flight> flights = flightService.getAllFlights();
-        flights.forEach(System.out::println);
     }
 }

@@ -4,7 +4,6 @@ import ua.com.danit.entity.Flight;
 import ua.com.danit.service.FlightService;
 import ua.com.danit.service.LoggerService;
 
-import java.io.IOException;
 import java.util.List;
 
 public class FlightController {
@@ -41,6 +40,10 @@ public class FlightController {
             LoggerService.error(e.getMessage());
             return false;
         }
+    }
+
+    public List<Flight> getDayFlights() {
+        return this.flightService.getDayFlights();
     }
 
     public boolean deleteFlightById(long id) {
