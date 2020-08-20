@@ -1,7 +1,6 @@
 package ua.com.danit.dao.booking;
 
 import ua.com.danit.entity.Book;
-import ua.com.danit.entity.Flight;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,13 +8,14 @@ import java.util.List;
 public interface Booking {
     List<Book> getAllBookins();
 
-    Flight getFlightById(long id);
+    Book getBookById(String id);
 
-    boolean deleteFlightById(long id);
+    boolean deleteBookById(String id);
 
-    boolean deleteFlight(Flight flight);
+    boolean deleteBook(Book Book);
 
-    boolean saveFlight(Flight flight);
+    Book saveBook(Book Book);
 
     boolean loadData() throws IOException;
+    boolean writeData() throws IOException;
 }
