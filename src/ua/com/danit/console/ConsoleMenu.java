@@ -3,6 +3,7 @@ package ua.com.danit.console;
 import javax.swing.*;
 import javax.xml.crypto.Data;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -29,18 +30,14 @@ public class ConsoleMenu {
                     safeCall(ConsoleMenu::searchBooking, scanner);
                     flightsList();
                     boolean stopMenuFlights = false;
-                    while (!stopMenuFlights) {
-                        Scanner scanner2 = new Scanner(System.in);
-                        String input2 = scanner2.nextLine();
-                        switch (input2) {
-                            case "0":
-                                stopMenuFlights = true;
-                                break;
-                            default:
-//                              // добавить в flightsBooking колличество итераций с searchBooking
-                                safeCall(ConsoleMenu::flightsBooking, scanner2);
-                                stopMenuFlights = true;
+                    while (!stopMenuFlights){
+                        Integer option = readTyped(scanner, Integer::parseInt, "Не число, попробуйте еще раз");
+                        if (option == 0) {
+                            stopMenuFlights = true;
+                            break;
                         }
+                            safeCall(ConsoleMenu::flightsBooking, scanner);
+                            stopMenuFlights = true;
                     }
                     break;
                 case "4":
@@ -68,19 +65,27 @@ public class ConsoleMenu {
         System.out.println("Введите номер рейса");
         Integer customerId = readTyped(scanner, Integer::parseInt, "Не номер рейса, попробуйте еще раз");
 //        add code here Flight Information connect to  DB
+
         System.out.println("Номер рейса: " + customerId + " Дата: " + " Время: " + " Место назначения: " + " Количество свободных мест: " );
     }
 
     private static void searchBooking(Scanner scanner) {
         System.out.println("Поиск и бронировка рейса");
+        System.out.println("Место выезда");
+        String homePlace = readTyped(scanner, String::valueOf, "Не место, попробуйте еще раз");
         System.out.println("Место назначения");
         String flightPlace= readTyped(scanner, String::valueOf, "Не место, попробуйте еще раз");
         System.out.println("Введите дату (dd.mm.yyyy):");
-//      ?????? доработаь проверку даты и ее печать пока стоит как стринга
         String flightDate = readTyped(scanner, String::valueOf, "Не дата, попробуйте еще раз");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            Date date = simpleDateFormat.parse(flightDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         System.out.println("Количество человек");
         Integer flightPassengerQty = readTyped(scanner, Integer::parseInt, "Не число, попробуйте еще раз");
-        System.out.println("Список подходящих рейсов: в город " + flightPlace +" - на "+ flightDate +" - для "+ flightPassengerQty + " человек");
+        System.out.println("Список подходящих рейсов: из города " + homePlace+ "в город " + flightPlace +" - на "+ flightDate +" - для "+ flightPassengerQty + " человек");
     }
     private static void flightsList() {
         //      заменить flights на ответ с DB
@@ -91,6 +96,7 @@ public class ConsoleMenu {
             System.out.println((index++) + ". " + s);
         }
     }
+
     private static void flightsBooking(Scanner scanner) {
         // change 2 на flightPassengerQty from searchBooking
         for(int i = 0; i < 2; i++) {
