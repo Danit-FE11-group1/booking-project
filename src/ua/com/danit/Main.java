@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         CollectionFlightDao collectionFlightDao = new CollectionFlightDao();
         FlightService flightService = new FlightService(collectionFlightDao);
-        flightService.loadFlights();
+        flightService.uploadFlights();
         List<Flight> flights = flightService.getAllFlights();
         flights.forEach(System.out::println);
     }

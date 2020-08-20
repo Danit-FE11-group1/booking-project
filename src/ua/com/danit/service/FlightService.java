@@ -4,9 +4,11 @@ import ua.com.danit.dao.flight.CollectionFlightDao;
 import ua.com.danit.entity.Boat;
 import ua.com.danit.entity.City;
 import ua.com.danit.entity.Flight;
+import ua.com.danit.exception.FlightException;
 
 import java.io.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -19,23 +21,24 @@ public class FlightService {
 
     public FlightService(CollectionFlightDao collectionFlightDao) {
         this.collectionFlightDao = collectionFlightDao;
-
     }
 
     public List<Flight> getAllFlights() {
         return this.collectionFlightDao.getAllFlights();
     }
 
-    public List<Flight> searchFlights(String destination, int freeSeats) {
+    public List<Flight> searchFlights(String departure, String destination, int freeSeats) {
         return this.collectionFlightDao.getAllFlights().stream()
                 .filter(f -> f.getDestination().equals(destination))
+                .filter(f -> f.getDeparture().equals(departure))
                 .filter(f -> f.getFreeSeats() >= freeSeats)
                 .collect(Collectors.toList());
     }
 
-    public List<Flight> searchFlights(String destination, long date, int freeSeats) {
+    public List<Flight> searchFlights(String departure, String destination, long date, int freeSeats) {
         return this.collectionFlightDao.getAllFlights().stream()
                 .filter(f -> f.getDestination().equals(destination))
+                .filter(f -> f.getDeparture().equals(departure))
                 .filter(f -> {
                     Timestamp flightTimestamp = new Timestamp(f.getDate());
                     LocalDate flightDate = flightTimestamp.toLocalDateTime().toLocalDate();
@@ -47,8 +50,12 @@ public class FlightService {
                 .collect(Collectors.toList());
     }
 
-    public boolean bookingFlight(long id) {
-
+    public boolean bookingFlight(long id) throws FlightException {
+        Flight flight = this.collectionFlightDao.getFlightById(id);
+        if (flight.getFreeSeats() == 0) {
+            throw new FlightException("Not enough seats");
+        }
+        flight.bookingFlight();
         return true;
     }
 
@@ -97,7 +104,7 @@ public class FlightService {
         return new Flight(depCity, destCity, date, boat, cost);
     }
 
-    public void loadFlights() throws IOException {
+    public void uploadFlights() throws IOException {
         if(!(new File("flights.data").exists())) {
             for (int i = 0; i < 1000; i++) {
                 Flight flight = createFlight();

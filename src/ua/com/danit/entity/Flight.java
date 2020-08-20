@@ -39,6 +39,10 @@ public class Flight implements Serializable {
         return dateFormat.format(new Date(this.date));
     }
 
+    public void bookingFlight() {
+        this.freeSeats = this.freeSeats - 1;
+    }
+
     public long getId() {
         return id;
     }
@@ -77,10 +81,6 @@ public class Flight implements Serializable {
 
     public int getFreeSeats() {
         return freeSeats;
-    }
-
-    public void setFreeSeats(int freeSeats) {
-        this.freeSeats = freeSeats;
     }
 
     public double getCost() {

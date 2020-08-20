@@ -2,7 +2,9 @@ package ua.com.danit.controller;
 
 import ua.com.danit.entity.Flight;
 import ua.com.danit.service.FlightService;
+import ua.com.danit.service.LoggerService;
 
+import java.io.IOException;
 import java.util.List;
 
 public class FlightController {
@@ -10,6 +12,43 @@ public class FlightController {
 
     public FlightController(FlightService flightService) {
         this.flightService = flightService;
+    }
+
+    public List<Flight> getAllFlight() {
+        return this.flightService.getAllFlights();
+    }
+
+    public List<Flight> searchFlights(String departure, String destination, int freeSeats) {
+        return this.flightService.searchFlights(departure, destination, freeSeats);
+    }
+
+    public List<Flight> searchFlights(String departure, String destination, long date, int freeSeats) {
+        return this.flightService.searchFlights(departure, destination, date, freeSeats);
+    }
+
+    public void uploadFlights(){
+        try {
+            this.flightService.uploadFlights();
+        } catch (Exception e) {
+            LoggerService.error(e.getMessage());
+        }
+    }
+
+    public boolean bookingFlight(long id) {
+        try {
+            return this.flightService.bookingFlight(id);
+        } catch (Exception e) {
+            LoggerService.error(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteFlightById(long id) {
+        return this.flightService.deleteFlightById(id);
+    }
+
+    public boolean deleteFlight(Flight flight) {
+        return this.flightService.deleteFlight(flight);
     }
 
     public String getFlightInfo(long id) {
