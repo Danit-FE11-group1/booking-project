@@ -2,6 +2,7 @@ package ua.com.danit.dao.flight;
 
 
 import ua.com.danit.entity.Flight;
+import ua.com.danit.service.LoggerService;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,7 +15,8 @@ public class CollectionFlightDao implements FlightDao {
     private List<Flight> flights = new ArrayList<>();
 
     @Override
-    public List<Flight> getAllFamilies() {
+    public List<Flight> getAllFlights() {
+        LoggerService.info("Get all flights");
         return this.flights;
     }
 
@@ -22,9 +24,11 @@ public class CollectionFlightDao implements FlightDao {
     public Flight getFlightById(long id) {
         for (Flight flight : this.flights) {
             if (flight.getId() == id) {
+                LoggerService.info("Get flight " + id);
                 return flight;
             }
         }
+        LoggerService.error("Flight " + id + " not found");
         return null;
     }
 
@@ -32,20 +36,34 @@ public class CollectionFlightDao implements FlightDao {
     public boolean deleteFlightById(long id) {
         for (Flight flight : flights) {
             if (flight.getId() == id) {
+                LoggerService.info("Delete flight " + id);
                 return this.flights.remove(flight);
             }
         }
+        LoggerService.error("Flight " + id + " not found");
         return false;
     }
 
     @Override
     public boolean deleteFlight(Flight flight) {
-        return this.flights.remove(flight);
+        boolean result = this.flights.remove(flight);
+        if (result) {
+            LoggerService.info("Delete flight " + flight.getId());
+        } else {
+            LoggerService.error("Flight " + flight.getId() + " not found");
+        }
+        return result;
     }
 
     @Override
     public boolean saveFlight(Flight flight) {
-        return this.flights.add(flight);
+        boolean result = this.flights.add(flight);
+        if (result) {
+            LoggerService.info("Save flight " + flight.getId());
+        } else {
+            LoggerService.error("Flight " + flight.getId() + " not found");
+        }
+        return result;
     }
 
     @Override
@@ -55,9 +73,11 @@ public class CollectionFlightDao implements FlightDao {
             try {
                 objectOutputStream.writeObject(flight);
             } catch (Exception e) {
+                LoggerService.error(e.getMessage());
                 e.printStackTrace();
             }
         });
+        LoggerService.info("Load data");
         objectOutputStream.close();
         return true;
     }

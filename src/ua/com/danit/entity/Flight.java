@@ -96,13 +96,12 @@ public class Flight implements Serializable {
         Flight flight = (Flight) o;
         return date == flight.date &&
                 Objects.equals(name, flight.name) &&
-                Objects.equals(destination, flight.destination) &&
-                boat == flight.boat;
+                Objects.equals(destination, flight.destination);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, date, destination, boat, freeSeats, cost);
+        return Objects.hash(name, date, destination, freeSeats, cost);
     }
 
     @Override

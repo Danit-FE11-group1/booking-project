@@ -17,6 +17,11 @@ public class FlightService {
 
     public FlightService(CollectionFlightDao collectionFlightDao) {
         this.collectionFlightDao = collectionFlightDao;
+
+    }
+
+    public List<Flight> getAllFlights() {
+        return this.collectionFlightDao.getAllFlights();
     }
 
     public Flight getFlightById(long id) {
@@ -26,27 +31,9 @@ public class FlightService {
     public List<Flight> getDayFlights() {
         long startDate = new Date().getTime();
         long endDate = startDate + 24 * 60 * 60 * 1000;
-        return this.collectionFlightDao.getAllFamilies().stream()
+        return this.collectionFlightDao.getAllFlights().stream()
                 .filter(f -> f.getDate() <= endDate && f.getDate() > startDate)
                 .collect(Collectors.toList());
-    }
-
-    public void loadFlights() throws IOException {
-        if(!(new File("flights.data").exists())) {
-            for (int i = 0; i < 1000; i++) {
-                this.collectionFlightDao.saveFlight(createFlight());
-            }
-        } else {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("flights.data"));
-            boolean flag = true;
-            while (flag) {
-                try {
-                    this.collectionFlightDao.saveFlight((Flight) objectInputStream.readObject());
-                } catch (Exception e) {
-                    flag = false;
-                }
-            }
-        }
     }
 
     private Flight createFlight() {
@@ -70,5 +57,32 @@ public class FlightService {
         return new Flight(city, date, boat, cost);
     }
 
+    public void loadFlights() throws IOException {
+        if(!(new File("flights.data").exists())) {
+            for (int i = 0; i < 1000; i++) {
+                Flight flight = createFlight();
+                this.collectionFlightDao.saveFlight(flight);
+            }
+            this.collectionFlightDao.loadData();
+        } else {
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("flights.data"));
+            boolean flag = true;
+            while (flag) {
+                try {
+                    this.collectionFlightDao.saveFlight((Flight) objectInputStream.readObject());
+                } catch (Exception e) {
+                    flag = false;
+                }
+            }
+        }
+    }
+
+    public boolean deleteFlightById(long id) {
+        return this.collectionFlightDao.deleteFlightById(id);
+    }
+
+    public boolean deleteFlight(Flight flight) {
+        return this.collectionFlightDao.deleteFlight(flight);
+    }
 
 }

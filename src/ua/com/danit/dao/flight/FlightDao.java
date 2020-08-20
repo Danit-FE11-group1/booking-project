@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FlightDao {
-    List<Flight> getAllFamilies();
+    List<Flight> getAllFlights();
 
     Flight getFlightById(long id);
 
