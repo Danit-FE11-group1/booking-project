@@ -2,20 +2,20 @@ package ua.com.danit.entity;
 
 import java.io.Serializable;
 
-public class Book implements Serializable {
+public class Booking implements Serializable {
     private final String name;
     private final String surname;
     private final Flight flight;
     private String id;
+    private static final long serialVersionUID = 72856348767356L;
 
-
-    public Book(String name, String surname, Flight flight, String id) {
+    public Booking(String name, String surname, Flight flight, String id) {
         this.name = name;
         this.surname = surname;
         this.flight = flight;
         this.id = id;
     }
-    public Book(String name, String surname, Flight flight) {
+    public Booking(String name, String surname, Flight flight) {
         this.name = name;
         this.surname = surname;
         this.flight = flight;
@@ -44,14 +44,14 @@ public class Book implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Book)) return false;
+        if (!(o instanceof Booking)) return false;
 
-        Book book = (Book) o;
+        Booking booking = (Booking) o;
 
-        if (!name.equals(book.name)) return false;
-        if (!surname.equals(book.surname)) return false;
-        if (!flight.equals(book.flight)) return false;
-        return id.equals(book.id);
+        if (!name.equals(booking.name)) return false;
+        if (!surname.equals(booking.surname)) return false;
+        if (!flight.equals(booking.flight)) return false;
+        return id.equals(booking.id);
     }
 
     @Override
