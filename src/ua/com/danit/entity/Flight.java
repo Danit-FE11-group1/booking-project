@@ -33,7 +33,7 @@ public class Flight implements Serializable {
     }
 
     public String showDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss Z", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm", Locale.getDefault());
         return dateFormat.format(new Date(this.date));
     }
 

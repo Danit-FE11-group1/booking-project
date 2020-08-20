@@ -6,6 +6,8 @@ import ua.com.danit.entity.City;
 import ua.com.danit.entity.Flight;
 
 import java.io.*;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +24,27 @@ public class FlightService {
 
     public List<Flight> getAllFlights() {
         return this.collectionFlightDao.getAllFlights();
+    }
+
+    public List<Flight> searchFlights(String destination, int freeSeats) {
+        return this.collectionFlightDao.getAllFlights().stream()
+                .filter(f -> f.getDestination().equals(destination))
+                .filter(f -> f.getFreeSeats() >= freeSeats)
+                .collect(Collectors.toList());
+    }
+
+    public List<Flight> searchFlights(String destination, long date, int freeSeats) {
+        return this.collectionFlightDao.getAllFlights().stream()
+                .filter(f -> f.getDestination().equals(destination))
+                .filter(f -> {
+                    Timestamp flightTimestamp = new Timestamp(f.getDate());
+                    LocalDate flightDate = flightTimestamp.toLocalDateTime().toLocalDate();
+                    Timestamp currTimestamp = new Timestamp(date);
+                    LocalDate currDate = currTimestamp.toLocalDateTime().toLocalDate();
+                    return flightDate.compareTo(currDate) == 0;
+                })
+                .filter(f -> f.getFreeSeats() >= freeSeats)
+                .collect(Collectors.toList());
     }
 
     public Flight getFlightById(long id) {
@@ -41,13 +64,17 @@ public class FlightService {
         int cityIndex = random.nextInt(City.values().length);
         City city = City.values()[cityIndex];
 
+        long hourInMillis = 1000 * 60 * 60;
+
         long today = new Date().getTime();
-        long month = random.nextInt(12) * 1000 * 60 * 60 * 24 * 30;
-        long day = random.nextInt(30) * 1000 * 60 * 60 * 24;
-        long hour = random.nextInt(24) * 1000 * 60 * 60;
-        long minutes = random.nextInt(60) * 1000 * 60;
-        long afterDate = month + day + hour + minutes;
-        long date = today + afterDate;
+        long month = random.nextInt(12) * hourInMillis * 24 * 30;
+        long day = random.nextInt(30) * hourInMillis * 24;
+        long hour = random.nextInt(24) * hourInMillis;
+
+        long minutes = random.nextInt(4) * 15 * 1000 * 60;
+        long afterDate = month + day + hour;
+        long date = (today + afterDate) / hourInMillis;
+        date = date * hourInMillis + minutes;
 
         int boatIndex = random.nextInt(Boat.values().length);
         Boat boat = Boat.values()[boatIndex];
