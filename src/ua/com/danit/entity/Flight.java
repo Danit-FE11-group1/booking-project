@@ -110,7 +110,9 @@ public class Flight implements Serializable {
 
     @Override
     public String toString() {
-        return "Flight from "
+        return "Flight "
+                + this.name
+                + "from "
                 + this.departure
                 + " to "
                 + this.destination

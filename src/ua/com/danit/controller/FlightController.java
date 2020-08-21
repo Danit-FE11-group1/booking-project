@@ -57,7 +57,10 @@ public class FlightController {
     public String getFlightInfo(long id) {
         String flightInfo = "";
         Flight flight = this.flightService.getFlightById(id);
-        flightInfo = flight.getDestination()
+        flightInfo = "Flight from "
+                + flight.getDeparture()
+                + " to "
+                + flight.getDestination()
                 + ", "
                 + flight.getName()
                 + ", "
