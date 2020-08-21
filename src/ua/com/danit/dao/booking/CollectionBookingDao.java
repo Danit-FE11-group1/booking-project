@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class CollectionBookingDao implements BookingDao {
-    private List<Booking> bookings = new ArrayList<>();
+    private final List<Booking> bookings = new ArrayList<>();
     private long idCounter = 0;
 
     @Override
@@ -48,6 +48,7 @@ public class CollectionBookingDao implements BookingDao {
 
     @Override
     public boolean loadData() throws IOException {
+        bookings.clear();
         if(new File("Books.data").exists()) {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("Books.data"));
             boolean flag = true;
@@ -65,7 +66,9 @@ public class CollectionBookingDao implements BookingDao {
 
     @Override
     public boolean writeData() throws IOException {
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("Books.data"));
+//        new File("Books.data").delete();
+        new FileOutputStream("Books.data").close();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File("Books.data")));
         this.bookings.forEach(book -> {
             try {
                 objectOutputStream.writeObject(book);
