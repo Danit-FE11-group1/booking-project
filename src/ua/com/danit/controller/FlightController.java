@@ -12,7 +12,6 @@ public class FlightController {
     public FlightController(FlightService flightService) {
         this.flightService = flightService;
     }
-
     public List<Flight> getAllFlight() {
         return this.flightService.getAllFlights();
     }

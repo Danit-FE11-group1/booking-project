@@ -112,7 +112,7 @@ public class Flight implements Serializable {
     public String toString() {
         return "Flight "
                 + this.name
-                + "from "
+                + " from "
                 + this.departure
                 + " to "
                 + this.destination
