@@ -1,7 +1,11 @@
 package ua.com.danit;
 
-public class Main {
-    public static void main(String[] args) {
+import ua.com.danit.console.ConsoleMenu;
 
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        ConsoleMenu.start();
     }
 }
