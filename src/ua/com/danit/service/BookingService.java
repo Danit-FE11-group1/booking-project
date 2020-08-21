@@ -4,6 +4,7 @@ import ua.com.danit.dao.booking.CollectionBookingDao;
 import ua.com.danit.entity.Booking;
 import ua.com.danit.entity.Flight;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,5 +29,13 @@ public class BookingService {
         return CollectionBookingDao.getAllBookins().stream()
                 .filter(el -> el.getName().equals(name) && el.getSurname().equals(surname))
                 .collect(Collectors.toList());
+    }
+
+    public boolean loadData() throws IOException {
+        return CollectionBookingDao.loadData();
+    }
+
+    public boolean writeData() throws IOException {
+        return CollectionBookingDao.writeData();
     }
 }
