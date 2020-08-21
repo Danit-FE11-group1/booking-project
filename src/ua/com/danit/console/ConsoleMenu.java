@@ -1,19 +1,36 @@
 package ua.com.danit.console;
 
+import ua.com.danit.controller.BookController;
+import ua.com.danit.controller.FlightController;
+import ua.com.danit.dao.booking.CollectionBookingDao;
+import ua.com.danit.dao.flight.CollectionFlightDao;
+import ua.com.danit.entity.Flight;
+import ua.com.danit.exception.FlightException;
+import ua.com.danit.service.BookingService;
+import ua.com.danit.service.FlightService;
+
 import javax.swing.*;
 import javax.xml.crypto.Data;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ConsoleMenu {
+    public static CollectionFlightDao collectionFlightDao = new  CollectionFlightDao();
+    public static FlightService flightService = new FlightService(collectionFlightDao);
+    public static FlightController flightController = new  FlightController(flightService);
+    public static CollectionBookingDao collectionBookingDao = new CollectionBookingDao();
+    public static BookingService bookingService = new BookingService(collectionBookingDao);
+    public static BookController bookController = new BookController(bookingService, flightController);
+
+    static {
+        flightController.uploadFlights();
+    }
     public static void start() {
+
         Scanner scanner = new Scanner(System.in);
         boolean stopProgram = false;
         while (!stopProgram) {
@@ -28,17 +45,6 @@ public class ConsoleMenu {
                     break;
                 case "3":
                     safeCall(ConsoleMenu::searchBooking, scanner);
-                    flightsList();
-                    boolean stopMenuFlights = false;
-                    while (!stopMenuFlights){
-                        Integer option = readTyped(scanner, Integer::parseInt, "Не число, попробуйте еще раз");
-                        if (option == 0) {
-                            stopMenuFlights = true;
-                            break;
-                        }
-                            safeCall(ConsoleMenu::flightsBooking, scanner);
-                            stopMenuFlights = true;
-                    }
                     break;
                 case "4":
                     safeCall(ConsoleMenu::cancelBooking, scanner);
@@ -50,95 +56,100 @@ public class ConsoleMenu {
                     stopProgram = true;
                     break;
                 default:
-                    System.out.println("Неизвестная команда");
+                    System.out.println("Unknown input");
             }
         }
     }
     private static void scoreboardOnline(Scanner scanner) {
-        System.out.println("Онлайн-табло");
-//        add code here Online Scoreboard connect to  DB
-        System.out.println("ДОБАВИТЬ ВЫВОД Всех рейсов из Киева в ближайшие 24 часа");
+        System.out.println("Online scoreboard");
+       List <Flight> flights = flightController.getDayFlights();
+       flights.forEach(System.out::println);
     }
 
     private static void flightsInfo(Scanner scanner) {
-        System.out.println("Посмотреть информацию о рейсе");
-        System.out.println("Введите номер рейса");
-        Integer customerId = readTyped(scanner, Integer::parseInt, "Не номер рейса, попробуйте еще раз");
-//        add code here Flight Information connect to  DB
-
-        System.out.println("Номер рейса: " + customerId + " Дата: " + " Время: " + " Место назначения: " + " Количество свободных мест: " );
+        System.out.println("View flight information");
+        System.out.println("Enter flight number");
+        Long flightId = readTyped(scanner, Long::parseLong, "Not flight number, please try again");
+        String flight = flightController.getFlightInfo(flightId);
+        System.out.println(flight);
     }
 
     private static void searchBooking(Scanner scanner) {
-        System.out.println("Поиск и бронировка рейса");
-        System.out.println("Место выезда");
-        String homePlace = readTyped(scanner, String::valueOf, "Не место, попробуйте еще раз");
-        System.out.println("Место назначения");
-        String flightPlace= readTyped(scanner, String::valueOf, "Не место, попробуйте еще раз");
-        System.out.println("Введите дату (dd.mm.yyyy):");
-        String flightDate = readTyped(scanner, String::valueOf, "Не дата, попробуйте еще раз");
+        System.out.println("Search and book a flight");
+        System.out.println("Departure");
+        String homePlace = readTyped(scanner, String::valueOf, "No place, try again");
+        System.out.println("Destination");
+        String flightPlace= readTyped(scanner, String::valueOf, "No place, try again");
+        System.out.println("Enter Date (dd.mm.yyyy):");
+        String flightDate = readTyped(scanner, String::valueOf, "Not date, try again");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Long date = 0l;
         try {
-            Date date = simpleDateFormat.parse(flightDate);
+            date = simpleDateFormat.parse(flightDate).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println("Количество человек");
-        Integer flightPassengerQty = readTyped(scanner, Integer::parseInt, "Не число, попробуйте еще раз");
-        System.out.println("Список подходящих рейсов: из города " + homePlace+ "в город " + flightPlace +" - на "+ flightDate +" - для "+ flightPassengerQty + " человек");
-    }
-    private static void flightsList() {
-        //      заменить flights на ответ с DB
-        System.out.println("0. Выход");
-        List<String> flights = Arrays.asList("2343", "3453", "3453", "4534");
+        System.out.println("Number of persons");
+        Integer flightPassengerQty = readTyped(scanner, Integer::parseInt, "Not a number, try again");
+        List<Flight> flights = flightController.searchFlights(homePlace, flightPlace, date, flightPassengerQty);
+        System.out.println("0. Exit");
         int index = 1;
-        for (String s : flights) {
-            System.out.println((index++) + ". " + s);
+        for (Flight item: flights) {
+            System.out.println((index++) + ". " + item);
+        }
+        System.out.println("Enter chosen option");
+        Integer option = readTyped(scanner, Integer::parseInt, "Not a number, try again");
+        Flight flight = flights.get(option - 1);
+        if (option == 0) {
+            return;
+        }
+        for(int i = 0; i < flightPassengerQty; i++) {
+            System.out.println("Enter Name");
+            String passengerName= readTyped(scanner, String::valueOf, "Not a name, try again");
+            System.out.println("Enter Surname");
+            String passengerSurname= readTyped(scanner, String::valueOf, "Not a surname, try again");
+            try {
+                bookController.registerPassengerForFlight(passengerName, passengerSurname, flight);
+            } catch (FlightException e) {
+                e.printStackTrace();
+            }
+            System.out.println(bookController.getRegistrationsByPassanger(passengerName, passengerSurname));
+
+//       DB записать бронировку?
         }
     }
-
-    private static void flightsBooking(Scanner scanner) {
-        // change 2 на flightPassengerQty from searchBooking
-        for(int i = 0; i < 2; i++) {
-            System.out.println("Ведите имя");
-            String passengerName= readTyped(scanner, String::valueOf, "Не имя, попробуйте еще раз");
-            System.out.println("Ведите фамилию");
-            String passengerSurname= readTyped(scanner, String::valueOf, "Не фамилия, попробуйте еще раз");
-            //Есть возможность добавить № бронирования ???
-            System.out.println("Вы забронировали рейс"+ "- для " + passengerName + "- " + passengerSurname + "# бронирования");
-        }
-     }
     private static void cancelBooking(Scanner scanner) {
-        System.out.println("Отменить бронирование");
-        System.out.println("Введите номер бронирования");
-        Integer bookingNumber = readTyped(scanner, Integer::parseInt, "Не число, попробуйте еще раз");
-//      add code here delete booking in BD return conformation from BD
-        System.out.println("Ваша бронь " + bookingNumber + " была отменена");
+        System.out.println("Cancel booking");
+        System.out.println("Enter booking number");
+        String bookingNumber = readTyped(scanner, String::valueOf, "Not a number, try again");
+        bookController.cancelRegistrationForFlight(bookingNumber);
+        System.out.println("Your booking number " + bookingNumber + " was canceled");
     }
     private static void myFlights(Scanner scanner) {
-        System.out.println("Мои рейсы");
-        System.out.println("Ведите имя");
-        String accountName= readTyped(scanner, String::valueOf, "Не имя, попробуйте еще раз");
-        System.out.println("Ведите фамилию");
-        String accountSurname= readTyped(scanner, String::valueOf, "Не фамилия, попробуйте еще раз");
-//      add code here return list of bookings from BD
-        System.out.println( accountName + accountSurname + " ваш список бронирований: ");
+        System.out.println("My flights");
+        System.out.println("Enter Name");
+        String accountName= readTyped(scanner, String::valueOf, "Not a name, try again");
+        System.out.println("Enter Surname");
+        String accountSurname= readTyped(scanner, String::valueOf, "Not a surname, try again");
+        bookController.getRegistrationsByPassanger(accountName, accountSurname);
+        System.out.println("List of your flights: " + accountName + " " + accountSurname);
+        System.out.println(bookController.getRegistrationsByPassanger(accountName, accountSurname));
     }
     private static void safeCall(Consumer<Scanner> consumer, Scanner scanner) {
         try {
             consumer.accept(scanner);
         } catch (Exception e) {
-            System.err.printf("Произошла ошибка: %s%n", e.getMessage());
+            System.err.printf("An error has occurred: %s%n", e.getMessage());
         }
     }
     private static void printMenuItems() {
-        System.out.println("Введите команду");
-        System.out.println("1. Онлайн-табло");
-        System.out.println("2. Посмотреть информацию о рейсе");
-        System.out.println("3. Поиск и бронировка рейса");
-        System.out.println("4. Отменить бронирование");
-        System.out.println("5. Мои рейсы");
-        System.out.println("6. Выход");
+        System.out.println("Enter the command");
+        System.out.println("1. Online scoreboard");
+        System.out.println("2. View flight information");
+        System.out.println("3. Search and book a flight");
+        System.out.println("4. Cancel booking");
+        System.out.println("5. My flights");
+        System.out.println("6. Exit");
     }
     private static <T> T readTyped(Scanner scanner, Function<String, T> func, String errMessage) {
         T tValue = null;
