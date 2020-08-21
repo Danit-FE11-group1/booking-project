@@ -124,6 +124,10 @@ public class FlightService {
         }
     }
 
+    public void loadFlights() throws IOException {
+        this.collectionFlightDao.loadData();
+    }
+
     public boolean deleteFlightById(long id) {
         return this.collectionFlightDao.deleteFlightById(id);
     }

@@ -9,9 +9,6 @@ import ua.com.danit.exception.FlightException;
 import ua.com.danit.service.BookingService;
 import ua.com.danit.service.FlightService;
 
-import javax.swing.*;
-import javax.xml.crypto.Data;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -53,6 +50,7 @@ public class ConsoleMenu {
                     break;
                 case "6":
                     stopProgram = true;
+                    flightController.loadFlights();
                     break;
                 default:
                     System.out.println("Unknown input");

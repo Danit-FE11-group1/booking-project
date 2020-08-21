@@ -24,6 +24,16 @@ public class FlightController {
         return this.flightService.searchFlights(departure, destination, date, freeSeats);
     }
 
+    public boolean loadFlights() {
+        try{
+            this.flightService.loadFlights();
+            return true;
+        } catch (Exception e) {
+            LoggerService.error(e.getMessage());
+            return false;
+        }
+    }
+
     public void uploadFlights() {
         try {
             this.flightService.uploadFlights();
