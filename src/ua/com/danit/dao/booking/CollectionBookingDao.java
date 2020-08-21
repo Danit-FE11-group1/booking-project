@@ -1,6 +1,6 @@
 package ua.com.danit.dao.booking;
 
-import ua.com.danit.entity.Book;
+import ua.com.danit.entity.Booking;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -8,18 +8,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class CollectionBooking implements Booking {
-    private List<Book> books = new ArrayList<>();
+public class CollectionBookingDao implements BookingDao {
+    private List<Booking> bookings = new ArrayList<>();
     private long idCounter = 0;
 
     @Override
-    public List<Book> getAllBookins() {
-        return Collections.unmodifiableList(this.books);
+    public List<Booking> getAllBookins() {
+        return Collections.unmodifiableList(this.bookings);
     }
 
     @Override
-    public Book getBookById(String id) {
-        return books.stream()
+    public Booking getBookById(String id) {
+        return bookings.stream()
                 .filter(el -> el.getId().equals(id))
                 .findFirst()
                 .orElse(null);
@@ -27,23 +27,23 @@ public class CollectionBooking implements Booking {
 
     @Override
     public boolean deleteBookById(String id) {
-        return books.removeIf(el -> el.getId().equals(id));
+        return bookings.removeIf(el -> el.getId().equals(id));
     }
 
     @Override
-    public boolean deleteBook(Book book) {
-        return books.remove(book);
+    public boolean deleteBook(Booking booking) {
+        return bookings.remove(booking);
     }
 
     @Override
-    public Book saveBook(Book book) {
-        if (book.getId() == null) {
+    public Booking saveBook(Booking booking) {
+        if (booking.getId() == null) {
             Random random = new Random();
-            book.setId(Long.toString(idCounter) + '-' + random.nextInt(15) + '-' + random.nextInt(15));
+            booking.setId(Long.toString(idCounter) + '-' + random.nextInt(15) + '-' + random.nextInt(15));
             idCounter++;
         }
-        books.add(book);
-        return book;
+        bookings.add(booking);
+        return booking;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CollectionBooking implements Booking {
             boolean flag = true;
             while (flag) {
                 try {
-                    this.saveBook((Book) objectInputStream.readObject());
+                    this.saveBook((Booking) objectInputStream.readObject());
                 } catch (Exception e) {
                     flag = false;
                     e.printStackTrace();
@@ -66,7 +66,7 @@ public class CollectionBooking implements Booking {
     @Override
     public boolean writeData() throws IOException {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("Books.data"));
-        this.books.forEach(book -> {
+        this.bookings.forEach(book -> {
             try {
                 objectOutputStream.writeObject(book);
             } catch (Exception e) {

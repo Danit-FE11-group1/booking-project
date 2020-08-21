@@ -1,20 +1,20 @@
 package ua.com.danit.dao.booking;
 
-import ua.com.danit.entity.Book;
+import ua.com.danit.entity.Booking;
 
 import java.io.IOException;
 import java.util.List;
 
-public interface Booking {
-    List<Book> getAllBookins();
+public interface BookingDao {
+    List<Booking> getAllBookins();
 
-    Book getBookById(String id);
+    Booking getBookById(String id);
 
     boolean deleteBookById(String id);
 
-    boolean deleteBook(Book Book);
+    boolean deleteBook(Booking Booking);
 
-    Book saveBook(Book Book);
+    Booking saveBook(Booking Booking);
 
     boolean loadData() throws IOException;
     boolean writeData() throws IOException;

@@ -12,6 +12,10 @@ public class LoggerService {
         writeLog("DEBUG", logMessage);
     }
 
+    public static void warn(String logMessage) {
+        writeLog("WARN", logMessage);
+    }
+
     public static void error(String logMessage) {
         writeLog("ERROR", logMessage);
     }
