@@ -30,7 +30,6 @@ public class ConsoleMenu {
         flightController.uploadFlights();
     }
     public static void start() {
-
         Scanner scanner = new Scanner(System.in);
         boolean stopProgram = false;
         while (!stopProgram) {
@@ -114,8 +113,6 @@ public class ConsoleMenu {
                 e.printStackTrace();
             }
             System.out.println(bookController.getRegistrationsByPassanger(passengerName, passengerSurname));
-
-//       DB записать бронировку?
         }
     }
     private static void cancelBooking(Scanner scanner) {
