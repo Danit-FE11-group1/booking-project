@@ -127,6 +127,9 @@ public class Flight implements Serializable {
                 + '\n'
                 + "price: "
                 + this.cost
-                + "$";
+                + "$"
+                + '\n'
+                + "id = "
+                + this.id;
     }
 }
