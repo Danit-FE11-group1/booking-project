@@ -47,36 +47,38 @@ public class CollectionBookingDao implements BookingDao {
     }
 
     @Override
-    public boolean loadData() throws IOException {
-        bookings.clear();
-        if(new File("Books.data").exists()) {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("Books.data"));
-            boolean flag = true;
-            while (flag) {
-                try {
-                    this.saveBook((Booking) objectInputStream.readObject());
-                } catch (Exception e) {
-                    flag = false;
-                    e.printStackTrace();
+    public boolean loadData() {
+        try {
+            bookings.clear();
+            if (new File("Books.data").exists()) {
+                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("Books.data"));
+                boolean flag = true;
+                while (flag) {
+                    try {
+                        this.saveBook((Booking) objectInputStream.readObject());
+                    } catch (Exception e) {
+                        flag = false;
+                    }
                 }
             }
+        } catch (IOException ignored) {
         }
         return true;
     }
 
     @Override
-    public boolean writeData() throws IOException {
-//        new File("Books.data").delete();
-        new FileOutputStream("Books.data").close();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File("Books.data")));
-        this.bookings.forEach(book -> {
-            try {
-                objectOutputStream.writeObject(book);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        objectOutputStream.close();
+    public boolean writeData() {
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File("Books.data")));
+            this.bookings.forEach(book -> {
+                try {
+                    objectOutputStream.writeObject(book);
+                } catch (Exception ignored) {
+                }
+            });
+            objectOutputStream.close();
+        } catch (IOException ignored) {
+        }
         return true;
     }
 

@@ -54,7 +54,7 @@ class BookControllerTest {
     }
 
     @Test
-    void writeData() throws IOException {
+    void writeData() throws FlightException {
         BookingService newBookingService = new BookingService(new CollectionBookingDao());
         Booking booking = newBookingService.registerPassengerForFlight("ms1", "sr1", FlightController.getAllFlight().get(0));
         newBookingService.writeData();

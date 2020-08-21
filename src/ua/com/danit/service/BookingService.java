@@ -3,8 +3,8 @@ package ua.com.danit.service;
 import ua.com.danit.dao.booking.CollectionBookingDao;
 import ua.com.danit.entity.Booking;
 import ua.com.danit.entity.Flight;
+import ua.com.danit.exception.FlightException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +15,7 @@ public class BookingService {
         CollectionBookingDao = collectionBookingDao;
     }
 
-    public Booking registerPassengerForFlight(String name, String surname, Flight flight){
+    public Booking registerPassengerForFlight(String name, String surname, Flight flight) throws FlightException {
         flight.bookingFlight();
         return CollectionBookingDao.saveBook(new Booking(name, surname, flight));
 
@@ -31,11 +31,11 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    public boolean loadData() throws IOException {
+    public boolean loadData() {
         return CollectionBookingDao.loadData();
     }
 
-    public boolean writeData() throws IOException {
+    public boolean writeData() {
         return CollectionBookingDao.writeData();
     }
 }

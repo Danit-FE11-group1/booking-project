@@ -6,9 +6,11 @@ import ua.com.danit.entity.City;
 import ua.com.danit.entity.Flight;
 import ua.com.danit.exception.FlightException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -105,7 +107,7 @@ public class FlightService {
     }
 
     public void uploadFlights() throws IOException {
-        if(!(new File("flights.data").exists())) {
+        if (!(new File("flights.data").exists())) {
             for (int i = 0; i < 1000; i++) {
                 Flight flight = createFlight();
                 this.collectionFlightDao.saveFlight(flight);

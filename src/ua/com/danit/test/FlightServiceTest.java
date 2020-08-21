@@ -9,8 +9,6 @@ import ua.com.danit.service.FlightService;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,7 +59,7 @@ class FlightServiceTest {
         int sizeBefore = flightService.getAllFlights().size();
         Flight flight = flightService.getAllFlights().get(1);
         flightService.deleteFlight(flight);
-        assertEquals(sizeBefore -  1, flightService.getAllFlights().size());
+        assertEquals(sizeBefore - 1, flightService.getAllFlights().size());
     }
 
     @Test

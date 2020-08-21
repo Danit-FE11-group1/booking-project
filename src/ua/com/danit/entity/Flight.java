@@ -11,11 +11,11 @@ public class Flight implements Serializable {
     private static final long serialVersionUID = 70971091051081211L;
 
     private final long id;
-    private String name;
-    private long date;
     private final String destination;
     private final String departure;
     Boat boat;
+    private String name;
+    private long date;
     private int freeSeats;
     private double cost;
 

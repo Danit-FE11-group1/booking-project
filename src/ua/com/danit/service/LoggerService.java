@@ -21,7 +21,7 @@ public class LoggerService {
     }
 
     public static void writeLog(String logType, String logMessage) {
-        try(Writer fileWriter = new FileWriter("application.log", true)) {
+        try (Writer fileWriter = new FileWriter("application.log", true)) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             String date = simpleDateFormat.format(new Date());
             fileWriter.append(date)

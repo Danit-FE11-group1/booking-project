@@ -3,11 +3,11 @@ package ua.com.danit.entity;
 import java.io.Serializable;
 
 public class Booking implements Serializable {
+    private static final long serialVersionUID = 72856348767356L;
     private final String name;
     private final String surname;
     private final Flight flight;
     private String id;
-    private static final long serialVersionUID = 72856348767356L;
 
     public Booking(String name, String surname, Flight flight, String id) {
         this.name = name;
@@ -15,14 +15,11 @@ public class Booking implements Serializable {
         this.flight = flight;
         this.id = id;
     }
+
     public Booking(String name, String surname, Flight flight) {
         this.name = name;
         this.surname = surname;
         this.flight = flight;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -39,6 +36,10 @@ public class Booking implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

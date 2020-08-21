@@ -19,21 +19,21 @@ public class BookController {
     }
 
     public Booking registerPassengerForFlight(String name, String surname, Flight flight) throws FlightException {
-        if (FlightController.bookingFlight(flight.getId())){
+        if (FlightController.bookingFlight(flight.getId())) {
             Booking newBooking = this.BookingService.registerPassengerForFlight(name, surname, flight);
-            LoggerService.info("Creating Booking for \"" + name + " " + surname + "\" with id: "+ newBooking.getId());
+            LoggerService.info("Creating Booking for \"" + name + " " + surname + "\" with id: " + newBooking.getId());
             return newBooking;
-        }else {
-            LoggerService.warn("Can`t create Booking to Flight #"+ flight.getId());
+        } else {
+            LoggerService.warn("Can`t create Booking to Flight #" + flight.getId());
             return null;
         }
     }
 
     public boolean cancelRegistrationForFlight(String bookId) {
         boolean deleted = this.BookingService.cancelRegistrationForFlight(bookId);
-        if(deleted){
-            LoggerService.info("Safe deleted Booking with id: "+ bookId);
-        }else {
+        if (deleted) {
+            LoggerService.info("Safe deleted Booking with id: " + bookId);
+        } else {
             LoggerService.warn("Can`t delete booking with id: " + bookId);
         }
         return deleted;

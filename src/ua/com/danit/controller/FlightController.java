@@ -12,6 +12,7 @@ public class FlightController {
     public FlightController(FlightService flightService) {
         this.flightService = flightService;
     }
+
     public List<Flight> getAllFlight() {
         return this.flightService.getAllFlights();
     }
@@ -25,7 +26,7 @@ public class FlightController {
     }
 
     public boolean loadFlights() {
-        try{
+        try {
             this.flightService.loadFlights();
             return true;
         } catch (Exception e) {

@@ -17,5 +17,6 @@ public interface BookingDao {
     Booking saveBook(Booking Booking);
 
     boolean loadData() throws IOException;
+
     boolean writeData() throws IOException;
 }
