@@ -25,7 +25,7 @@ public class FlightController {
         return this.flightService.searchFlights(departure, destination, date, freeSeats);
     }
 
-    public void uploadFlights(){
+    public void uploadFlights() {
         try {
             this.flightService.uploadFlights();
         } catch (Exception e) {
@@ -69,7 +69,10 @@ public class FlightController {
                 + flight.getFreeSeats()
                 + "("
                 + flight.getBoat().getSeats()
-                + ")";
+                + ")"
+                + '\n'
+                + "id = "
+                + flight.getId();
         return flightInfo;
     }
 
